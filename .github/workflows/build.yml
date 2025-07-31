@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build and Analyze
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run SonarScanner CLI
+        shell: cmd
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          sonar-scanner.bat ^
+            -Dsonar.projectKey=Avi123Avi_Python_AI_dec18fc1-9375-41ba-9e2d-ef9564654142 ^
+            -Dsonar.sources=. ^
+            -Dsonar.host.url=${{ env.SONAR_HOST_URL }} ^
+            -Dsonar.login=${{ env.SONAR_TOKEN }}
